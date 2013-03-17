@@ -12,14 +12,14 @@ gem_package "riemann-tools" do
 end
 
 unless Chef::Config[:solo]
-  puts '###### ---- Using Chef Server Mode for Riemann ---- ######'
+  puts '###### ---- Using Chef Server Mode for Riemann Health ---- ######'
   runit_service "riemann-health" do
     options ({
     :riemann_host => search(:node, "recipe:riemann\\:\\:server AND chef_environment:#{node.chef_environment}").first,
     :name => node.name}.merge(params))
   end
 else
-  puts '###### ---- Using Chef Solo Mode for Riemann ---- ######'
+  puts '###### ---- Using Chef Solo Mode for Riemann Health ---- ######'
   runit_service "riemann-health" do
     riemann_server = search(:riemann, "id:riemann_server").first
     options ({
