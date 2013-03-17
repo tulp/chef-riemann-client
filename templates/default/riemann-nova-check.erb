@@ -1,0 +1,45 @@
+#!/bin/ruby
+require 'rubygems'
+require 'riemann/client'
+require 'rufus/scheduler'
+schedul = Rufus::Scheduler.start_new
+client = Riemann::Client.new "host" => "<%=@riemann_server_address%>", "port" => 5555
+
+schedul.every '1m' do
+  #get list from nova-manage service list
+  nova_list = %x[nova-manage service list]
+	nova_services = nova_list.split("\n")
+	nova_services.each do |service|
+    line = service.gsub(/[^A-Za-z0-9.;:\/()]/, ' ').split
+    line.each do |f|
+      service_name = f[0]
+      node_name = f[1]
+      nova = f[2]
+      if f[3] == "disabled"
+        running = nil
+      else
+        running = true
+      end
+      if f[4] == ":)"
+        status = true
+      else
+        status = nil
+      end  
+    end
+    if running? & status?
+      state = "ok"
+    else
+      if !running? & !status?
+        state = "warning"
+      else
+        state = "critical"
+      end
+    end
+    #send to riemann
+    client << {
+       "host" => node_name,
+       "service" => service_name,
+       "state" =>  state
+     }
+  end
+end
