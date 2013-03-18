@@ -5,4 +5,4 @@ ulimit -n 4096
 ulimit -a
 
 
-exec chpst -u nobody /opt/vagrant_ruby/bin/riemann-health --host <%= @options[:riemann_host] %> -e <%= @options[:name]%>
+exec chpst -u nobody /opt/chef/embedded/bin/ruby /opt/chef/embedded/bin/riemann-health --host <%= @options[:riemann_host] %> -e <%= @options[:name]%>
