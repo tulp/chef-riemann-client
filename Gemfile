@@ -1,4 +1,4 @@
 source :rubygems
 
 gem 'berkshelf'
-gem 'rufus-scheduler'
+gem 'daemons'
