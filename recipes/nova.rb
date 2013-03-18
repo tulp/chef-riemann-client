@@ -8,9 +8,20 @@ gem_package "riemann-client" do
   notifies :restart, resources(:service => 'riemann-nova')
 end
 
-gem_package "rufus-scheduler" do
+gem_package "daemons" do
+  version '1.1.9'
   action :install
   notifies :restart, resources(:service => 'riemann-nova')
+end
+
+template "#{node[:riemann][:riemann_runner_nova_executable]}" do
+  source "riemann-runner.erb"
+  owner "root"
+  group "root"
+  mode 0755
+  variables(
+  :executable => "#{node[:riemann][:riemann_nova_executable]}")
+  action :create
 end
 
 unless Chef::Config[:solo]

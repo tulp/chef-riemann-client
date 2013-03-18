@@ -1,0 +1,16 @@
+require 'rubygems'        # if you use RubyGems
+require 'daemons'
+
+
+options = {
+    :app_name   => "<%=node[:riemann][:app_name]%>",
+    :ARGV       => ['start', '-f', '--'],
+    :dir_mode   => :system,
+    :dir        => 'pids',
+    :multiple   => false,
+    :ontop      => true,
+    :mode       => :exec,
+    :backtrace  => true,
+    :monitor    => true
+}
+Daemons.run("<%=@executable%>", options)

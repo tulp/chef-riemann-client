@@ -1,7 +1,7 @@
+<%= node[:riemann][:ruby_shebang]%>
+# encoding: UTF-8
 require 'rubygems'
 require 'riemann/client'
-require 'rufus-scheduler'
-#schedul = Rufus::Scheduler.start_new
 client = Riemann::Client.new :host => "<%=@riemann_server_address%>", :port => 5555
 
 #declare variables 
@@ -9,26 +9,25 @@ running = nil
 status = nil
 node_name = nil
 service_name = nil
-#run every minute
-#schedul.every '1m' do
-  #get list from nova-manage service list
-  nova_list = %x[nova-manage service list]
-	nova_services = nova_list.split("\n")
-	nova_services.each do |service|
+run = true
+
+nova_list = %x[nova-manage service list]
+  nova_services = nova_list.encode("iso-8859-1", :invalid => :replace).split('\n')
+  nova_services.each do |service|
     entry = service.gsub(/[^A-Za-z0-9.;:\/()-]/, ' ').split
-      service_name = entry[0]
-      node_name = entry[1]
-      nova = entry[2]
-      if entry[3] == "disabled"
-        running = nil
-      else
-        running = true
-      end
-      if entry[4] == ":)"
-        status = true
-      else
-        status = nil
-      end  
+    service_name = entry[0]
+    node_name = entry[1]
+    nova = entry[2]
+    if entry[3] == "disabled"
+      running = nil
+    else
+      running = true
+    end
+    if entry[4] == ":)"
+      status = true
+    else
+      status = nil
+    end  
     if running & status
       state = "ok"
     else
@@ -40,9 +39,8 @@ service_name = nil
     end
     #send to riemann
     client << {
-       :host => node_name,
-       :service => service_name,
-       :state =>  state
-     }
-  end
-#end
+      :host => node_name,
+      :service => service_name,
+      :state =>  state
+    }
+end

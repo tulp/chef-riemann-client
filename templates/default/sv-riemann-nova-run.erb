@@ -5,4 +5,4 @@ ulimit -n 4096
 ulimit -a
 
 
-exec chpst -u nobody /opt/chef/embedded/bin/ruby /usr/bin/riemann-nova-service
+exec chpst -u nobody <%= node[:riemann][:ruby_exec]%> <%=node[:riemann][:riemann_runner_nova_executable]%>
