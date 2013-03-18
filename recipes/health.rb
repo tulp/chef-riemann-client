@@ -1,6 +1,3 @@
-#riemann_server = 
-# we currently dont use chef server so we have do define the server-ip ourselve
-
 service 'riemann-health' do
   supports :restart => true
 end
