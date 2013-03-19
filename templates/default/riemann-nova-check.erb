@@ -50,6 +50,6 @@ loop do
 	    :state =>  state
 	  }
 	end
-	sleep 30
+	sleep <%= node[:riemann][:nova][:interval]%>
 end
 

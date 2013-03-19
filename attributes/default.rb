@@ -7,5 +7,6 @@ default[:riemann][:riemann_runner_executable] = "/usr/bin/riemann-runner"
 
 #nova-check specific runner
 default[:riemann][:nova][:app_name] = "nova-check"
+default[:riemann][:nova][:interval] = 60
 default[:riemann][:nova][:riemann_runner_executable] = "/usr/bin/riemann-runner-nova"
 default[:riemann][:nova][:riemann_executable] = "/usr/bin/riemann-nova-service"
