@@ -1,0 +1,36 @@
+<%= node[:riemann][:ruby_shebang]%>
+# encoding: utf-8
+require 'rubygems'
+require 'riemann/client'
+
+#since .encode didnt worked as expected we use a custom function
+class String
+  def validate_encoding
+    chars.select(&:valid_encoding?).join 
+  end
+end
+
+loop do 
+	client = Riemann::Client.new :host => "<%=@riemann_server_address%>", :port => 5555
+	#declare variables 
+	running = nil
+	status = nil
+	node_name = nil
+	service_name = nil
+	fixed_list = %x[nova-manage fixed list]
+	count_warnings = fixed_list.validate_encoding.scan(/WARNING/).count
+	if count_warnings > <%=node[:riemann][:fixed_ip][:threshold]%>
+	state = "warning"
+	else
+	state = "ok"
+	end
+	#send to riemann
+	client << {
+		:host => "<%=node.name%>",
+		:service => "fixed_ip",
+		:state =>  state,
+		:metric => count_warnings
+	 }
+	sleep <%= node[:riemann][:fixed_ip][:interval]%>
+end
+
