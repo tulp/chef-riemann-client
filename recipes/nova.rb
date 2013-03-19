@@ -14,13 +14,14 @@ gem_package "daemons" do
   notifies :restart, resources(:service => 'riemann-nova')
 end
 
-template "#{node[:riemann][:riemann_runner_nova_executable]}" do
+template "#{node[:riemann][:nova][:riemann_runner_executable]}" do
   source "riemann-runner.erb"
   owner "root"
   group "root"
   mode 0755
   variables(
-  :executable => "#{node[:riemann][:riemann_nova_executable]}")
+  :executable => "#{node[:riemann][:nova][:riemann_executable]}",
+  :app_name => "nova")
   action :create
 end
 
