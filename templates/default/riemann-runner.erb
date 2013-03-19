@@ -3,14 +3,14 @@ require 'daemons'
 
 
 options = {
-    :app_name   => "<%=node[:riemann][:app_name]%>",
+    :app_name   => "<%=@app_name%>",
     :ARGV       => ['start', '-f', '--'],
     :dir_mode   => :system,
     :dir        => 'pids',
     :multiple   => false,
     :ontop      => true,
-    :mode       => :exec,
+    :mode       => :load,
     :backtrace  => true,
-    :monitor    => true
+    :monitor    => false
 }
 Daemons.run("<%=@executable%>", options)

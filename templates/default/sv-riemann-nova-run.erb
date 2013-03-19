@@ -5,4 +5,4 @@ ulimit -n 4096
 ulimit -a
 
 
-exec chpst -u nobody <%= node[:riemann][:ruby_exec]%> <%=node[:riemann][:riemann_runner_nova_executable]%>
+exec chpst -u root <%= node[:riemann][:ruby_exec]%> <%=node[:riemann][:nova][:riemann_runner_executable]%> restart

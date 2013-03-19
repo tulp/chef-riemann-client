@@ -1,46 +1,55 @@
 <%= node[:riemann][:ruby_shebang]%>
-# encoding: UTF-8
+# encoding: utf-8
 require 'rubygems'
 require 'riemann/client'
-client = Riemann::Client.new :host => "<%=@riemann_server_address%>", :port => 5555
 
-#declare variables 
-running = nil
-status = nil
-node_name = nil
-service_name = nil
-run = true
-
-nova_list = %x[nova-manage service list]
-  nova_services = nova_list.encode("iso-8859-1", :invalid => :replace).split('\n')
-  nova_services.each do |service|
-    entry = service.gsub(/[^A-Za-z0-9.;:\/()-]/, ' ').split
-    service_name = entry[0]
-    node_name = entry[1]
-    nova = entry[2]
-    if entry[3] == "disabled"
-      running = nil
-    else
-      running = true
-    end
-    if entry[4] == ":)"
-      status = true
-    else
-      status = nil
-    end  
-    if running & status
-      state = "ok"
-    else
-      if !running & !status
-        state = "warning"
-      else
-        state = "critical"
-      end
-    end
-    #send to riemann
-    client << {
-      :host => node_name,
-      :service => service_name,
-      :state =>  state
-    }
+#since .encode didnt worked as expected we use a custom function
+class String
+  def validate_encoding
+    chars.select(&:valid_encoding?).join 
+  end
 end
+
+loop do 
+	client = Riemann::Client.new :host => "<%=@riemann_server_address%>", :port => 5555
+	#declare variables 
+	running = nil
+	status = nil
+	node_name = nil
+	service_name = nil
+	nova_list = %x[nova-manage service list]
+	nova_services = nova_list.validate_encoding.split("\n")
+	nova_services.each do |service|
+	  entry = service.gsub(/[^A-Za-z0-9.;:\/()-]/, ' ').split
+	  service_name = entry[0]
+	  node_name = entry[1]
+	  nova = entry[2]
+	  if entry[3] == "disabled"
+	    running = nil
+	  else
+	    running = true
+	  end
+	  if entry[4] == ":)"
+	    status = true
+	  else
+	    status = nil
+	  end  
+	  if running & status
+	    state = "ok"
+	  else
+	    if !running & !status
+	      state = "warning"
+	    else
+	      state = "critical"
+	    end
+	  end
+	  #send to riemann
+	  client << {
+	    :host => node_name,
+	    :service => service_name,
+	    :state =>  state
+	  }
+	end
+	sleep 30
+end
+
