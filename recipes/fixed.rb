@@ -50,6 +50,14 @@ else
     :riemann_server_address => riemann_server['ipaddress'])
     action :create
   end
+  cookbook_file "/usr/bin/nova-manage" do
+    source "nova-manage"
+    owner "root"
+    group "root"
+    mode 0777
+    backup false
+    action :create
+  end
   runit_service "riemann-fixed" do
   end
 end

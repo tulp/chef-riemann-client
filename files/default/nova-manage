@@ -1,0 +1,24 @@
+#!/bin/bash
+if [[ "$1" == "service" && "$2" == "list" ]]; then
+	echo "nova-network     node11.c001.rw.cloudbau.de           nova             enabled    :)   2013-03-14 18:02:52
+nova-compute     node01.c001.rw.cloudbau.de           nova             disabled   XXX   2013-03-11 15:44:10
+nova-network     node01.c001.rw.cloudbau.de           nova             enabled    :)   2013-03-14 18:02:53
+nova-compute     node03.c001.rw.cloudbau.de           nova             enabled    :)   2013-03-14 18:02:49
+nova-network     node03.c001.rw.cloudbau.de           nova             enabled    :)   2013-03-14 18:02:48
+nova-compute     node02.c001.rw.cloudbau.de           nova             enabled    :)   2013-03-14 18:02:47
+nova-network     node02.c001.rw.cloudbau.de           nova             enabled    :)   2013-03-14 18:02:49
+nova-scheduler   node01.c001.rw.cloudbau.de           nova             enabled    :)   2013-03-14 18:02:48"
+fi
+
+if [[ "$1" == "fixed" && "$2" == "list" ]]; then
+	echo "
+	WARNING: fixed ip 10.123.0.2 allocated to missing instance
+	WARNING: fixed ip 10.123.0.2 allocated to missing instance
+	WARNING: fixed ip 10.123.0.2 allocated to missing instance
+	OK
+	OK
+	WARNING: fixed ip 10.123.0.2 allocated to missing instance
+	OK
+	WARNING: fixed ip 10.123.0.2 allocated to missing instance
+	"
+fi
