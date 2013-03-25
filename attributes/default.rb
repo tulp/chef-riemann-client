@@ -13,5 +13,5 @@ default[:riemann][:nova][:riemann_executable] = "/usr/bin/riemann-nova-service"
 #fixed-ip check
 default[:riemann][:fixed_ip][:threshold] = 2
 default[:riemann][:fixed_ip][:interval] = 60
-default[:riemann][:fixed_ip][:riemann_runner_executable] = "/usr/bin/riemman-runner-fixed"
+default[:riemann][:fixed_ip][:riemann_runner_executable] = "/usr/bin/riemann-runner-fixed"
 default[:riemann][:fixed_ip][:riemann_executable] = "/usr/bin/riemann-fixed-service"
