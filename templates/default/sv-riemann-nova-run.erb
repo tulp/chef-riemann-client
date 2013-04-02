@@ -4,5 +4,5 @@ exec 2>&1
 ulimit -n 4096
 ulimit -a
 
-
+export RBENV_VERSION=<%= node[:riemann][:ruby_version] %>
 exec chpst -u root <%= node[:riemann][:ruby_exec]%> <%=node[:riemann][:nova][:riemann_runner_executable]%> restart
