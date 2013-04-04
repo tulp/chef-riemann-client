@@ -1,7 +1,7 @@
 <%= node[:riemann][:ruby_shebang]%>
-# encoding: utf-8
+
 require 'rubygems'
-require 'riemann/client'
+require 'riemann/tools'
 
 #since .encode didnt worked as expected we use a custom function
 class String
@@ -10,27 +10,27 @@ class String
   end
 end
 
-loop do 
-	client = Riemann::Client.new :host => "<%=@riemann_server_address%>", :port => 5555
-	#declare variables 
-	running = nil
-	status = nil
-	node_name = nil
-	service_name = nil
-	fixed_list = %x[nova-manage fixed list]
-	count_warnings = fixed_list.validate_encoding.scan(/WARNING/).count
-	if count_warnings > <%=node[:riemann][:fixed_ip][:threshold]%>
-	state = "warning"
-	else
-	state = "ok"
-	end
-	#send to riemann
-	client << {
-		:host => "<%=node.name%>",
-		:service => "fixed_ip",
-		:state =>  state,
-		:metric => count_warnings
-	 }
-	sleep <%= node[:riemann][:fixed_ip][:interval]%>
+class FixedIps
+  include Riemann::Tools
+
+  def tick
+    fixed_list = %x[nova-manage fixed list]
+    count_warnings = fixed_list.validate_encoding.scan(/WARNING/).count
+    
+    if count_warnings > <%=node[:riemann][:fixed_ip][:threshold]%>
+      state = "warning"
+    else
+      state = "ok"
+    end
+    
+    #send to riemann
+    report(
+      :host => "<%=node.name%>",
+      :service => "fixed_ip",
+      :state =>  state,
+      :metric => count_warnings
+    )
+  end
 end
 
+FixedIps.run

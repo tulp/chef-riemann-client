@@ -1,7 +1,7 @@
 <%= node[:riemann][:ruby_shebang]%>
-# encoding: utf-8
+
 require 'rubygems'
-require 'riemann/client'
+require 'riemann/tools'
 
 #since .encode didnt worked as expected we use a custom function
 class String
@@ -10,46 +10,41 @@ class String
   end
 end
 
-loop do 
-	client = Riemann::Client.new :host => "<%=@riemann_server_address%>", :port => 5555
-	#declare variables 
-	running = nil
-	status = nil
-	node_name = nil
-	service_name = nil
-	nova_list = %x[nova-manage service list]
-	nova_services = nova_list.validate_encoding.split("\n")[1..-1]
-	nova_services.each do |service|
-	  entry = service.gsub(/[^A-Za-z0-9.;:\/()-]/, ' ').split
-	  service_name = entry[0]
-	  node_name = entry[1]
-	  nova = entry[2]
-	  if entry[3] == "disabled"
-	    running = nil
-	  else
-	    running = true
-	  end
-	  if entry[4] == ":-)"
-	    status = true
-	  else
-	    status = nil
-	  end  
-	  if running & status
-	    state = "ok"
-	  else
-	    if !running & !status
-	      state = "warning"
-	    else
-	      state = "critical"
-	    end
-	  end
-	  #send to riemann
-	  client << {
-	    :host => node_name,
-	    :service => service_name,
-	    :state =>  state
-	  }
-	end
-	sleep <%= node[:riemann][:nova][:interval]%>
+class NovaServices
+  include Riemann::Tools
+
+  def tick
+    nova_list = %x[nova-manage service list]
+    nova_services = nova_list.validate_encoding.split("\n")[1..-1]
+    
+    nova_services.each do |service|
+      entry = service.gsub(/[^A-Za-z0-9.;:\/()-]/, ' ').split
+      
+      service_name = entry[0]
+      node_name = entry[1]
+      nova = entry[2]
+      
+      running = entry[3] == "enabled"
+      status = entry[4] == ":-)"
+      
+      if running && status
+        state = "ok"
+      else
+        if !running && !status
+          state = "warning"
+        else
+          state = "critical"
+        end
+      end
+      
+      #send to riemann
+      riemann << {
+        :host => node_name,
+        :service => service_name,
+        :state =>  state
+      }
+    end
+  end
 end
 
+NovaServices.run

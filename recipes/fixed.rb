@@ -24,17 +24,6 @@ if riemann_server
     notifies :restart, resources(:service => 'riemann-nova')
   end
 
-  template "#{node[:riemann][:fixed_ip][:riemann_runner_executable]}" do
-    source "riemann-runner.erb"
-    owner "root"
-    group "root"
-    mode 0755
-    variables(
-    :executable => "#{node[:riemann][:fixed_ip][:riemann_executable]}",
-    :app_name => "fixed_ip")
-    action :create
-  end
-
   if Chef::Config[:solo]
     cookbook_file "/usr/bin/nova-manage" do
       source "nova-manage"
@@ -51,8 +40,13 @@ if riemann_server
     owner "root"
     group "root"
     mode 0755
-    variables(:riemann_server_address => riemann_server)
     action :create
   end
-  runit_service "riemann-fixed"
+  
+  runit_service "riemann-fixed" do
+    options ({
+      :riemann_host => riemann_server,
+      :name => Chef::Config[:solo] ? node[:network][:interfaces][:eth1][:addresses].keys.first : node.name
+    }.merge(params))
+  end
 end
