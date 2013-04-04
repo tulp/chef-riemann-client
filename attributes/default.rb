@@ -7,7 +7,7 @@ default[:riemann][:ruby_version] = "1.9.3-p286"
 default[:riemann][:riemann_runner_executable] = "/usr/bin/riemann-runner"
 
 #nova-check specific
-default[:riemann][:nova][:interval] = 60
+default[:riemann][:nova][:interval] = 30
 default[:riemann][:nova][:riemann_runner_executable] = "/usr/bin/riemann-runner-nova"
 default[:riemann][:nova][:riemann_executable] = "/usr/bin/riemann-nova-service"
 
