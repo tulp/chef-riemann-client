@@ -18,7 +18,7 @@ loop do
 	node_name = nil
 	service_name = nil
 	nova_list = %x[nova-manage service list]
-	nova_services = nova_list.validate_encoding.split("\n")
+	nova_services = nova_list.validate_encoding.split("\n")[1..-1]
 	nova_services.each do |service|
 	  entry = service.gsub(/[^A-Za-z0-9.;:\/()-]/, ' ').split
 	  service_name = entry[0]
