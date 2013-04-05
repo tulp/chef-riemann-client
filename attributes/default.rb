@@ -3,11 +3,10 @@ default[:riemann][:ruby_shebang] = '#!/opt/rbenv/shims/ruby'
 default[:riemann][:ruby_exec] = "/opt/rbenv/shims/ruby"
 default[:riemann][:ruby_version] = "1.9.3-p286"
 
-#general runner
-default[:riemann][:riemann_runner_executable] = "/usr/bin/riemann-runner"
+#kvm-check specific
+default[:riemann][:kvm][:riemann_executable] = "/usr/bin/riemann-kvm-service"
 
 #nova-check specific
-#default[:riemann][:nova][:interval] = 30
 default[:riemann][:nova][:riemann_executable] = "/usr/bin/riemann-nova-service"
 
 #fixed-ip check

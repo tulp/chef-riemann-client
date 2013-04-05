@@ -15,6 +15,14 @@ if riemann_server
     notifies :restart, resources(:service => 'riemann-kvminstances')
   end
 
+  template "/usr/bin/riemann-kvm-service" do
+    source "riemann-kvm-check.erb"
+    owner "root"
+    group "root"
+    mode 0755
+    action :create
+  end
+
   runit_service "riemann-kvminstances" do
     options({
       :riemann_host => riemann_server,

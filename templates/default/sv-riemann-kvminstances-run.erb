@@ -4,7 +4,5 @@ exec 2>&1
 ulimit -n 4096
 ulimit -a
 
-export HOME=/home/riemann
 export RBENV_VERSION=<%= node[:riemann][:ruby_version] %>
-cd $HOME
-exec chpst -u riemann /opt/rbenv/shims/riemann-kvminstances --host <%= @options[:riemann_host] %> -e <%= @options[:name]%>
+exec chpst -u root <%= node[:riemann][:ruby_exec]%> <%=node[:riemann][:kvm][:riemann_executable]%> --host <%= @options[:riemann_host] %> -e <%= @options[:name]%>

@@ -17,13 +17,6 @@ if riemann_server
     notifies :restart, resources(:service => 'riemann-nova')
   end
 
-  rbenv_gem "daemons" do
-    ruby_version node[:riemann][:ruby_version]
-    version '1.1.9'
-    action :install
-    notifies :restart, resources(:service => 'riemann-nova')
-  end
-
   if Chef::Config[:solo]
     cookbook_file "/usr/bin/nova-manage" do
       source "nova-manage"

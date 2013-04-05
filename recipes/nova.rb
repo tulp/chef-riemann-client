@@ -8,16 +8,9 @@ if riemann_server
     supports :restart => true
   end
 
-  rbenv_gem "riemann-client" do
+  rbenv_gem "riemann-tools" do
     ruby_version node[:riemann][:ruby_version]
-    version '0.0.8'
-    action :install
-    notifies :restart, resources(:service => 'riemann-nova')
-  end
-
-  rbenv_gem "daemons" do
-    ruby_version node[:riemann][:ruby_version]
-    version '1.1.9'
+    version '0.1.1'
     action :install
     notifies :restart, resources(:service => 'riemann-nova')
   end
