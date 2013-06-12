@@ -16,7 +16,7 @@ end
 
 rbenv_gem "riemann-client" do
   ruby_version node[:riemann][:ruby_version]
-  version '0.0.8'
+  version node[:riemann][:client_version]
   action :install
 end
 

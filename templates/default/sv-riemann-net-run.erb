@@ -1,0 +1,10 @@
+#!/bin/sh
+
+exec 2>&1
+ulimit -n 4096
+ulimit -a
+
+export HOME=/home/riemann
+export RBENV_VERSION=<%= node[:riemann][:ruby_version] %>
+cd $HOME
+exec chpst -u riemann /opt/rbenv/shims/riemann-net --host <%= @options[:riemann_host] %> -e <%= @options[:name]%>
