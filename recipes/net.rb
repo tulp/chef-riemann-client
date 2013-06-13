@@ -31,7 +31,7 @@ if riemann_server
   runit_service "riemann-net" do
     options ({
       :riemann_host => riemann_server,
-      :name => Chef::Config[:solo] ? node[:network][:interfaces][:eth1][:addresses].keys.first : node[:name]
+      :name => Chef::Config[:solo] ? node[:network][:interfaces][:eth1][:addresses].keys.first : node[:fqdn]
     }.merge(params))
   end
 
