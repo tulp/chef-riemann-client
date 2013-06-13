@@ -29,7 +29,7 @@ if riemann_server
 
   rbenv_gem "riemann-tools" do
     ruby_version node[:riemann][:ruby_version]
-    version '0.1.1'
+    version node[:riemann][:tools_version]
     action :install
     notifies :restart, resources(:service => 'riemann-nova')
   end
