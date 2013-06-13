@@ -19,5 +19,3 @@ rbenv_gem "riemann-client" do
   version node[:riemann][:client_version]
   action :install
 end
-
-include_recipe 'riemann-client::health'
