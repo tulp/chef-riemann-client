@@ -19,3 +19,10 @@ default[:riemann][:fixed_ip][:interval] = 60
 default[:riemann][:fixed_ip][:riemann_executable] = "/usr/bin/riemann-fixed-service"
 
 default[:riemann][:server][:bind_ip] = nil
+
+case platform
+when "redhat","centos","fedora", "amazon", "scientific"
+  default[:riemann][:client][:install_pkgs] = %w{ libxml2-devel libxslt-devel }
+when "debian","ubuntu"
+  default[:riemann][:client][:install_pkgs] = %w{ libxml2-dev libxslt-dev }
+end

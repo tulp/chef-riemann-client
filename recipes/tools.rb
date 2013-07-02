@@ -19,10 +19,7 @@
 
 include_recipe "riemann-client::default"
 
-%w{
-  libxml2-devel
-  libxslt-devel
-}.each { |pkg| package pkg }
+node[:riemann][:client][:install_pkgs].each { |pkg| package pkg }
 
 rbenv_gem "riemann-tools" do
   ruby_version node[:riemann][:ruby_version]
