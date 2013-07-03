@@ -3,7 +3,7 @@ maintainer        "cloudbau GmbH"
 maintainer_email  "h.volkmer@cloudbau.de"
 license           "Apache v2.0"
 description       "Installs riemann-client, riemann-tools and some monitor probes"
-version           "1.0.0"
+version           "1.1.0"
 
 supports "centos", ">= 6.4"
 supports "ubuntu"
